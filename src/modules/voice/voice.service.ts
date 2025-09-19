@@ -45,7 +45,7 @@ export class VoiceService {
 
     await this.cacheResult(cacheKey, audioUrl, text, voice);
     await this.billing.incrementUsage(userId, 'tts', text.length);
-
+    
     return {
       url: audioUrl,
       cached: false,
@@ -67,10 +67,39 @@ export class VoiceService {
   }
 
   private async generateTTS(text: string, voice?: string): Promise<string> {
+    const apiKey = process.env.ELEVENLABS_API_KEY;
     const voiceId = this.getVoiceId(voice);
-    console.log(`🎙️  [MOCK] ElevenLabs TTS: voice=${voiceId}, chars=${text.length}`);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return `https://example.com/audio/tts_${Date.now()}.mp3`;
+    if (!apiKey) {
+      console.warn('ELEVENLABS_API_KEY not set; returning mock URL');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return `https://example.com/audio/tts_${Date.now()}.mp3`;
+    }
+
+    const fetch = (await import('node-fetch')).default as any;
+    const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify({
+        text,
+        model_id: process.env.ELEVENLABS_MODEL_ID || 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.4, similarity_boost: 0.7 }
+      })
+    });
+
+    if (!res.ok) {
+      const errTxt = await res.text();
+      throw new Error(`ElevenLabs TTS failed: ${res.status} ${errTxt}`);
+    }
+
+    const arrayBuffer = await res.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const dataUrl = 'data:audio/mpeg;base64,' + buffer.toString('base64');
+    return dataUrl;
   }
 
   private async cacheResult(cacheKey: string, url: string, text: string, voice?: string) {
@@ -78,11 +107,12 @@ export class VoiceService {
   }
 
   private getVoiceId(voice?: string): string {
+    const defaultId = process.env.DRILL_SERGEANT_VOICE_ID || 'DGzg6RaUqxGRTHSBjfgF';
     const voiceMap = {
-      strict: process.env.ELEVENLABS_VOICE_STRICT || 'voice_strict',
-      balanced: process.env.ELEVENLABS_VOICE_BALANCED || 'voice_balanced',
-      light: process.env.ELEVENLABS_VOICE_LIGHT || 'voice_light'
+      strict: process.env.ELEVENLABS_VOICE_STRICT || defaultId,
+      balanced: process.env.ELEVENLABS_VOICE_BALANCED || defaultId,
+      light: process.env.ELEVENLABS_VOICE_LIGHT || defaultId
     } as const;
     return (voiceMap as any)[voice || 'balanced'];
   }
-} 
+}
