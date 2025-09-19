@@ -6,17 +6,15 @@ export class VoiceService {
   constructor(private readonly billing: BillingService) {}
 
   async getPreset(id: string) {
-    const presets = {
-      'praise_30_day': 'https://example.com/audio/praise_30_day.mp3',
-      'alarm_wake': 'https://example.com/audio/alarm_wake.mp3',
-      'streak_save': 'https://example.com/audio/streak_save.mp3',
-    } as const;
-
-    const url = (presets as any)[id];
-    if (!url) {
-      throw new Error('Preset not found');
-    }
-
+    // Instead of static example URLs, synthesize a short preset line
+    const phrases: Record<string, string> = {
+      'praise_30_day': 'Thirty days strong. Outstanding discipline.',
+      'alarm_wake': 'Up! Out of bed. Mission starts now.',
+      'streak_save': 'Saved the streak. Keep the momentum.',
+    };
+    const text = phrases[id];
+    if (!text) throw new Error('Preset not found');
+    const url = await this.generateTTS(text, 'balanced');
     return { url, expiresAt: new Date(Date.now() + 3600000).toISOString() };
   }
 
@@ -107,12 +105,11 @@ export class VoiceService {
   }
 
   private getVoiceId(voice?: string): string {
-    const defaultId = process.env.DRILL_SERGEANT_VOICE_ID || 'DGzg6RaUqxGRTHSBjfgF';
     const voiceMap = {
-      strict: process.env.ELEVENLABS_VOICE_STRICT || defaultId,
-      balanced: process.env.ELEVENLABS_VOICE_BALANCED || defaultId,
-      light: process.env.ELEVENLABS_VOICE_LIGHT || defaultId
+      strict: process.env.ELEVENLABS_VOICE_STRICT || 'voice_strict',
+      balanced: process.env.ELEVENLABS_VOICE_BALANCED || 'voice_balanced',
+      light: process.env.ELEVENLABS_VOICE_LIGHT || 'voice_light'
     } as const;
     return (voiceMap as any)[voice || 'balanced'];
   }
-}
+} 
