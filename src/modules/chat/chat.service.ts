@@ -35,8 +35,10 @@ export class ChatService {
         const res = await client.chat.completions.create({
           model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
           messages,
-          temperature: 0.7,
-          max_tokens: 300,
+          temperature: 0.8,  // More creative responses
+          max_tokens: 500,   // Allow longer, richer responses
+          presence_penalty: 0.1,  // Encourage new topics
+          frequency_penalty: 0.2, // Reduce repetition
         });
 
         const text = res.choices?.[0]?.message?.content?.trim() || this.getCannedResponse(message, mode).reply;
