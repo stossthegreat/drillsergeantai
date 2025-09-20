@@ -1,37 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { HabitsService } from '../habits/habits.service';
 
 @Injectable()
 export class BriefService {
   private todaySelections = new Map<string, Set<string>>();
 
+  constructor(
+    @Inject(forwardRef(() => HabitsService))
+    private readonly habitsService: HabitsService,
+  ) {}
+
   async getTodaysBrief(userId: string) {
     const today = new Date().toISOString().split('T')[0];
     const selectedHabitIds = this.todaySelections.get(`${userId}-${today}`) || new Set();
     
-    const mockHabits = [
-      { id: 'h1', name: 'Morning Exercise', difficulty: 3, type: 'habit' },
-      { id: 'h2', name: 'Read 30 min', difficulty: 2, type: 'habit' },
-      { id: 'h3', name: 'Meditate', difficulty: 1, type: 'habit' }
-    ];
+    // Get actual habits from habits service
+    const userHabits = await this.habitsService.list(userId);
     
     const mockTasks = [
-      { id: 't1', title: 'Complete project report', type: 'task' },
-      { id: 't2', title: 'Call dentist', type: 'task' }
+      { id: 'task-1', title: 'Complete project report', type: 'task' },
+      { id: 'task-2', title: 'Call dentist', type: 'task' }
     ];
 
     const todayList = [];
-    mockHabits.forEach(habit => {
+    
+    // Add selected habits to today's list
+    userHabits.forEach(habit => {
       if (selectedHabitIds.has(habit.id)) {
         todayList.push({
           id: habit.id,
-          name: habit.name,
+          name: habit.title,
           type: 'habit',
-          difficulty: habit.difficulty,
-          completed: false
+          difficulty: 2, // Default difficulty
+          completed: false,
+          streak: habit.streak
         });
       }
     });
     
+    // Add selected tasks to today's list
     mockTasks.forEach(task => {
       if (selectedHabitIds.has(task.id)) {
         todayList.push({
@@ -44,6 +51,10 @@ export class BriefService {
     });
 
     return {
+      user: {
+        rank: 'Sergeant',
+        xp: 1200
+      },
       missions: [
         { id: 'm1', title: 'Complete 3 habits', progress: 0, target: 3 },
         { id: 'm2', title: 'Maintain streak', progress: 7, target: 30 }
@@ -56,6 +67,7 @@ export class BriefService {
         tasksCompleted: 0,
         streakDays: 7
       },
+      habits: userHabits, // Include all habits for fallback
       today: todayList
     };
   }
@@ -70,6 +82,8 @@ export class BriefService {
     
     this.todaySelections.get(key)!.add(habitId);
     
+    console.log(`✅ Selected ${habitId} for today (${targetDate}). Current selections:`, Array.from(this.todaySelections.get(key)!));
+    
     return { success: true, message: 'Added to today' };
   }
 
@@ -79,6 +93,7 @@ export class BriefService {
     
     if (this.todaySelections.has(key)) {
       this.todaySelections.get(key)!.delete(habitId);
+      console.log(`🗑️ Deselected ${habitId} from today (${targetDate}). Remaining selections:`, Array.from(this.todaySelections.get(key)!));
     }
     
     return { success: true, message: 'Removed from today' };
