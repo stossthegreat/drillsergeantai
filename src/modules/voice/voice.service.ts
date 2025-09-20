@@ -10,11 +10,37 @@ export class VoiceService {
       'praise_30_day': 'Thirty days strong. Outstanding discipline.',
       'alarm_wake': 'Up! Out of bed. Mission starts now.',
       'streak_save': 'Saved the streak. Keep the momentum.',
+      'DGzg6RaUqxGRTHSBjfgF': 'Outstanding work, soldier! Keep pushing forward!',
     };
+    
     const text = phrases[id];
-    if (!text) throw new Error('Preset not found');
-    const url = await this.generateTTS(text, 'balanced');
-    return { url, expiresAt: new Date(Date.now() + 3600000).toISOString() };
+    if (!text) {
+      console.log(`Voice preset not found for ID: ${id}, using default response`);
+      const defaultText = 'Outstanding work! Keep pushing forward!';
+      try {
+        const url = await this.generateTTS(defaultText, 'balanced');
+        return { url, expiresAt: new Date(Date.now() + 3600000).toISOString() };
+      } catch (error) {
+        console.error('TTS generation failed:', error);
+        return { 
+          url: null, 
+          message: defaultText,
+          expiresAt: new Date(Date.now() + 3600000).toISOString() 
+        };
+      }
+    }
+    
+    try {
+      const url = await this.generateTTS(text, 'balanced');
+      return { url, expiresAt: new Date(Date.now() + 3600000).toISOString() };
+    } catch (error) {
+      console.error('TTS generation failed:', error);
+      return { 
+        url: null, 
+        message: text,
+        expiresAt: new Date(Date.now() + 3600000).toISOString() 
+      };
+    }
   }
 
   async synthesize(userId: string, text: string, voice?: string) {
