@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, HttpException } from '@nestjs/common';
 import { BillingService } from '../billing/billing.service';
 
 @Injectable()
@@ -6,7 +6,6 @@ export class VoiceService {
   constructor(private readonly billing: BillingService) {}
 
   async getPreset(id: string) {
-    // Instead of static example URLs, synthesize a short preset line
     const phrases: Record<string, string> = {
       'praise_30_day': 'Thirty days strong. Outstanding discipline.',
       'alarm_wake': 'Up! Out of bed. Mission starts now.',
@@ -91,7 +90,13 @@ export class VoiceService {
 
     if (!res.ok) {
       const errTxt = await res.text();
-      throw new Error(`ElevenLabs TTS failed: ${res.status} ${errTxt}`);
+      if (res.status === 401 || res.status === 403) {
+        throw new ForbiddenException(`ElevenLabs auth/plan error: ${errTxt}`);
+      }
+      if (res.status === 402 || res.status === 429) {
+        throw new HttpException(`ElevenLabs quota/credits: ${errTxt}`, 402);
+      }
+      throw new HttpException(`ElevenLabs TTS failed: ${res.status} ${errTxt}`, res.status || 500);
     }
 
     const arrayBuffer = await res.arrayBuffer();
@@ -105,11 +110,12 @@ export class VoiceService {
   }
 
   private getVoiceId(voice?: string): string {
+    const defaultId = process.env.DRILL_SERGEANT_VOICE_ID || 'DGzg6RaUqxGRTHSBjfgF';
     const voiceMap = {
-      strict: process.env.ELEVENLABS_VOICE_STRICT || 'voice_strict',
-      balanced: process.env.ELEVENLABS_VOICE_BALANCED || 'voice_balanced',
-      light: process.env.ELEVENLABS_VOICE_LIGHT || 'voice_light'
+      strict: process.env.ELEVENLABS_VOICE_STRICT || defaultId,
+      balanced: process.env.ELEVENLABS_VOICE_BALANCED || defaultId,
+      light: process.env.ELEVENLABS_VOICE_LIGHT || defaultId
     } as const;
     return (voiceMap as any)[voice || 'balanced'];
   }
-} 
+}
