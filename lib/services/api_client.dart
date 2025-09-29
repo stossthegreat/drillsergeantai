@@ -500,9 +500,6 @@ class ApiClient {
       throw Exception('Failed to delete account: ${response.body}');
     }
   }
-}
-
-final apiClient = ApiClient(); 
 
   // ============ HABIT & TASK DELETION ============
   Future<void> deleteHabit(String habitId) async {
@@ -526,7 +523,6 @@ final apiClient = ApiClient();
       throw Exception('Failed to delete task: ${response.statusCode} ${response.body}');
     }
   }
-}
 
   Future<Map<String, dynamic>> fireAlarm(String alarmId) async {
     final response = await http.post(
@@ -541,3 +537,5 @@ final apiClient = ApiClient();
     }
   }
 }
+
+final apiClient = ApiClient();
