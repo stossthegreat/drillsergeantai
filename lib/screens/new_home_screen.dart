@@ -476,7 +476,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
                       ),
                     ),
                     Text(
-                      'Speech',
+                      'Progress: $progressPercent%',
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 12,
@@ -520,6 +520,64 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
+          // Today's Focus
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF121816),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF10B981).withOpacity(0.1),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      'Today\'s Focus',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.emoji_events, color: Color(0xFF10B981), size: 20),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF10B981).withOpacity(0.2),
+                        const Color(0xFF34D399).withOpacity(0.1),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Start with the highest-intensity mission for ${_dayName(selectedDate.weekday)}.',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          
           // Today's Missions
           Container(
             width: double.infinity,
@@ -804,7 +862,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       if (itemType == 'task') {
         await apiClient.completeTask(item['id'].toString());
       } else {
-        await apiClient.completeTask(item['id'].toString());
+        await apiClient.tickHabit(item['id'].toString());
       }
       HapticFeedback.selectionClick();
       _loadData(); // Refresh to get updated state
