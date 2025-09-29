@@ -40,7 +40,7 @@ class DrillSergeantApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter(
-      initialLocation: '/home',
+      initialLocation: '/onboarding',
       routes: [
         GoRoute(path: '/design', builder: (c, s) => const DesignGallery()),
         GoRoute(path: '/onboarding', builder: (c, s) => const OnboardingScreen()),
@@ -75,31 +75,7 @@ class DrillSergeantApp extends StatelessWidget {
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.ltr,
-          child: Stack(
-            children: [
-              child ?? const SizedBox(),
-              // Debug banner showing API URL
-              Positioned(
-                top: 40,
-                right: 10,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'API: ${apiClient.getBaseUrl()}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: child ?? const SizedBox(),
         );
       },
     );
