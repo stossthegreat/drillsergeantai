@@ -11,7 +11,7 @@ export declare class HabitsController {
             time: string;
             days: string[];
         };
-        lastTick: string;
+        lastTick: any;
         context: {
             difficulty: number;
             category: string;
@@ -24,24 +24,11 @@ export declare class HabitsController {
     }[]>;
     create(habitData: any): Promise<any>;
     tick(id: string): Promise<{
-        id: string;
-        userId: string;
-        title: string;
+        ok: boolean;
+        idempotent: boolean;
         streak: number;
-        schedule: {
-            time: string;
-            days: string[];
-        };
-        lastTick: string;
-        context: {
-            difficulty: number;
-            category: string;
-            lifeDays: number;
-        };
-        color: string;
-        reminderEnabled: boolean;
-        reminderTime: string;
-        createdAt: string;
+        timestamp: any;
+        message: string;
     }>;
     update(id: string, updateData: any): Promise<{
         id: string;
@@ -52,7 +39,7 @@ export declare class HabitsController {
             time: string;
             days: string[];
         };
-        lastTick: string;
+        lastTick: any;
         context: {
             difficulty: number;
             category: string;

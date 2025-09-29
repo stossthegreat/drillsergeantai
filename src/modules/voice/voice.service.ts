@@ -19,7 +19,7 @@ export class VoiceService {
     // If no API key, return mock
     if (!this.elevenLabsApiKey) {
       console.log('⚠️ ElevenLabs API key not configured, using mock TTS');
-      return {
+        return { 
         audioUrl: `https://mock-tts.com/audio/${encodeURIComponent(text)}`,
         voice: mentor,
         voiceId,
@@ -28,7 +28,7 @@ export class VoiceService {
         timestamp: new Date().toISOString()
       };
     }
-
+    
     try {
       console.log(`🎵 Generating ElevenLabs TTS for ${mentor}: "${text.substring(0, 50)}..."`);
       
@@ -77,7 +77,7 @@ export class VoiceService {
       console.error(`❌ ElevenLabs TTS error for ${mentor}: ${error.message}`);
       
       // Fallback to mock on error
-      return {
+      return { 
         audioUrl: `https://mock-tts.com/audio/${encodeURIComponent(text)}`,
         voice: mentor,
         voiceId,

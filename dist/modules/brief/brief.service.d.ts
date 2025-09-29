@@ -34,7 +34,7 @@ export declare class BriefService {
                 time: string;
                 days: string[];
             };
-            lastTick: string;
+            lastTick: any;
             context: {
                 difficulty: number;
                 category: string;
@@ -65,7 +65,7 @@ export declare class BriefService {
                 time: string;
                 days: string[];
             };
-            lastTick: string;
+            lastTick: any;
             context: {
                 difficulty: number;
                 category: string;

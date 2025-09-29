@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const prisma_module_1 = require("./modules/prisma/prisma.module");
 const voice_module_1 = require("./modules/voice/voice.module");
 const tasks_module_1 = require("./modules/tasks/tasks.module");
 const nudges_module_1 = require("./modules/nudges/nudges.module");
@@ -20,6 +21,7 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            prisma_module_1.PrismaModule,
             habits_module_1.HabitsModule,
             tasks_module_1.TasksModule,
             brief_module_1.BriefModule,
