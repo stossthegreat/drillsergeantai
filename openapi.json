@@ -59,6 +59,24 @@
             "description": ""
           }
         }
+      },
+      "delete": {
+        "operationId": "HabitsController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
       }
     },
     "/v1/tasks": {
@@ -128,6 +146,171 @@
         ]
       }
     },
+    "/v1/tasks/{id}": {
+      "delete": {
+        "operationId": "TasksController_delete",
+        "summary": "Delete task",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted"
+          }
+        },
+        "tags": [
+          "Tasks"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/alarms": {
+      "get": {
+        "operationId": "AlarmsController_list",
+        "summary": "List user alarms",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Alarms retrieved"
+          }
+        },
+        "tags": [
+          "Alarms"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "AlarmsController_create",
+        "summary": "Create new alarm",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Alarm created"
+          }
+        },
+        "tags": [
+          "Alarms"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/alarms/{id}": {
+      "delete": {
+        "operationId": "AlarmsController_delete",
+        "summary": "Delete alarm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alarm deleted"
+          }
+        },
+        "tags": [
+          "Alarms"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/alarms/{id}/dismiss": {
+      "post": {
+        "operationId": "AlarmsController_dismiss",
+        "summary": "Dismiss alarm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alarm dismissed"
+          }
+        },
+        "tags": [
+          "Alarms"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/alarms/{id}/fire": {
+      "post": {
+        "operationId": "AlarmsController_fire",
+        "summary": "Fire alarm with voice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alarm fired with voice"
+          }
+        },
+        "tags": [
+          "Alarms"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/voice/tts": {
+      "post": {
+        "operationId": "VoiceController_generateTTS",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/v1/brief": {
       "get": {
         "operationId": "BriefController_getBrief",
@@ -182,17 +365,6 @@
         "tags": [
           "Nudges"
         ]
-      }
-    },
-    "/v1/voice/tts": {
-      "post": {
-        "operationId": "VoiceController_generateTTS",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        }
       }
     },
     "/v1/reports/daily": {

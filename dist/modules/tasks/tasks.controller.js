@@ -30,6 +30,9 @@ let TasksController = class TasksController {
         await this.tasksService.completeTask(id, 'demo-user-123');
         return { ok: true, timestamp: new Date().toISOString() };
     }
+    async delete(req, id) {
+        return this.tasksService.delete(id, 'demo-user-123');
+    }
 };
 exports.TasksController = TasksController;
 __decorate([
@@ -64,6 +67,17 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "complete", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete task' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Task deleted' }),
+    (0, swagger_1.ApiBearerAuth)(),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], TasksController.prototype, "delete", null);
 exports.TasksController = TasksController = __decorate([
     (0, swagger_1.ApiTags)('Tasks'),
     (0, common_1.Controller)('v1/tasks'),

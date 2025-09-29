@@ -32,30 +32,7 @@ export class HabitsService {
   ];
 
   async list(userId: string) {
-    const userHabits = this.habits.filter(habit => habit.userId === userId);
-    
-    // Filter by schedule - only show habits that should appear today
-    const today = new Date();
-    const dayName = today.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const dayAbbr = today.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-    
-    return userHabits.filter(habit => {
-      const schedule = habit.schedule;
-      if (!schedule || !schedule.days) return true; // Show if no schedule
-      
-      const scheduleDays = schedule.days;
-      
-      // Check if today matches the schedule
-      if (scheduleDays.includes('daily')) return true;
-      if (scheduleDays.includes(dayName)) return true;
-      if (scheduleDays.includes(dayAbbr)) return true;
-      
-      // Check weekday patterns
-      if (scheduleDays.includes('weekdays') && today.getDay() >= 1 && today.getDay() <= 5) return true;
-      if (scheduleDays.includes('weekends') && (today.getDay() === 0 || today.getDay() === 6)) return true;
-      
-      return false;
-    });
+    return this.habits.filter(habit => habit.userId === userId);
   }
 
   async create(userId: string, habitData: any) {
@@ -64,7 +41,7 @@ export class HabitsService {
       userId,
       title: habitData.title || habitData.name,
       streak: 0,
-      schedule: habitData.schedule || { type: 'daily', days: ['daily'] },
+      schedule: habitData.schedule || { type: 'daily' },
       lastTick: null,
       context: habitData.context || { difficulty: 2 },
       color: habitData.color || 'emerald',
@@ -137,4 +114,4 @@ export class HabitsService {
     Object.assign(habit, updateData);
     return habit;
   }
-}
+} 

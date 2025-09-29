@@ -50,4 +50,27 @@ export declare class HabitsController {
         reminderTime: string;
         createdAt: string;
     }>;
+    delete(id: string): Promise<{
+        ok: boolean;
+        deleted: {
+            id: string;
+            userId: string;
+            title: string;
+            streak: number;
+            schedule: {
+                time: string;
+                days: string[];
+            };
+            lastTick: any;
+            context: {
+                difficulty: number;
+                category: string;
+                lifeDays: number;
+            };
+            color: string;
+            reminderEnabled: boolean;
+            reminderTime: string;
+            createdAt: string;
+        };
+    }>;
 }

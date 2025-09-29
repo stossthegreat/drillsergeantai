@@ -40,7 +40,27 @@ let HabitsService = class HabitsService {
         ];
     }
     async list(userId) {
-        return this.habits.filter(habit => habit.userId === userId);
+        const userHabits = this.habits.filter(habit => habit.userId === userId);
+        const today = new Date();
+        const dayName = today.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+        const dayAbbr = today.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+        return userHabits.filter(habit => {
+            const schedule = habit.schedule;
+            if (!schedule || !schedule.days)
+                return true;
+            const scheduleDays = schedule.days;
+            if (scheduleDays.includes('daily'))
+                return true;
+            if (scheduleDays.includes(dayName))
+                return true;
+            if (scheduleDays.includes(dayAbbr))
+                return true;
+            if (scheduleDays.includes('weekdays') && today.getDay() >= 1 && today.getDay() <= 5)
+                return true;
+            if (scheduleDays.includes('weekends') && (today.getDay() === 0 || today.getDay() === 6))
+                return true;
+            return false;
+        });
     }
     async create(userId, habitData) {
         const newHabit = {
@@ -48,7 +68,7 @@ let HabitsService = class HabitsService {
             userId,
             title: habitData.title || habitData.name,
             streak: 0,
-            schedule: habitData.schedule || { type: 'daily' },
+            schedule: habitData.schedule || { type: 'daily', days: ['daily'] },
             lastTick: null,
             context: habitData.context || { difficulty: 2 },
             color: habitData.color || 'emerald',

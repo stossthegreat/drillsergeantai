@@ -258,14 +258,8 @@ class _NewHabitsScreenState extends State<NewHabitsScreen> with TickerProviderSt
 
   Future<void> _deleteItem(String itemId) async {
     try {
-      // Delete item based on type
-      // Delete based on item type
-    final item = allItems.firstWhere((i) => i['id'].toString() == itemId);
-    if (item['type'] == 'habit') {
-      await apiClient.deleteHabit(itemId);
-    } else if (item['type'] == 'task') {
-      await apiClient.deleteTask(itemId);
-    }
+      // Would need delete endpoint
+      print('Deleting item: $itemId');
       _loadData();
       HapticFeedback.heavyImpact();
     } catch (e) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { HabitsService } from './habits.service';
 
 @Controller('v1/habits')
@@ -24,9 +24,4 @@ export class HabitsController {
   async update(@Param('id') id: string, @Body() updateData: any) {
     return this.habitsService.update(id, 'demo-user-123', updateData);
   }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.habitsService.delete(id, 'demo-user-123');
-  }
-}
+} 

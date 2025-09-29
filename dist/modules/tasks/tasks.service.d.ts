@@ -21,4 +21,17 @@ export declare class TasksService {
         completedAt: any;
         createdAt: string;
     };
+    delete(id: string, userId: string): Promise<{
+        ok: boolean;
+        deleted: {
+            id: string;
+            userId: string;
+            title: string;
+            description: string;
+            dueDate: string;
+            completed: boolean;
+            completedAt: any;
+            createdAt: string;
+        };
+    }>;
 }

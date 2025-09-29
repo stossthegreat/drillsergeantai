@@ -31,6 +31,9 @@ let HabitsController = class HabitsController {
     async update(id, updateData) {
         return this.habitsService.update(id, 'demo-user-123', updateData);
     }
+    async delete(id) {
+        return this.habitsService.delete(id, 'demo-user-123');
+    }
 };
 exports.HabitsController = HabitsController;
 __decorate([
@@ -61,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], HabitsController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], HabitsController.prototype, "delete", null);
 exports.HabitsController = HabitsController = __decorate([
     (0, common_1.Controller)('v1/habits'),
     __metadata("design:paramtypes", [habits_service_1.HabitsService])

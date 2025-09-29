@@ -15,6 +15,7 @@ const nudges_module_1 = require("./modules/nudges/nudges.module");
 const habits_module_1 = require("./modules/habits/habits.module");
 const brief_module_1 = require("./modules/brief/brief.module");
 const reports_module_1 = require("./modules/reports/reports.module");
+const alarms_module_1 = require("./modules/alarms/alarms.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -24,6 +25,7 @@ exports.AppModule = AppModule = __decorate([
             prisma_module_1.PrismaModule,
             habits_module_1.HabitsModule,
             tasks_module_1.TasksModule,
+            alarms_module_1.AlarmsModule,
             brief_module_1.BriefModule,
             nudges_module_1.NudgesModule,
             voice_module_1.VoiceModule,

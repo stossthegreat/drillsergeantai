@@ -49,4 +49,16 @@ export class TasksService {
     task.completedAt = new Date().toISOString();
     return task;
   }
-} 
+
+  async delete(id: string, userId: string) {
+    const taskIndex = this.tasks.findIndex(t => t.id === id && t.userId === userId);
+    if (taskIndex === -1) {
+      throw new Error('Task not found');
+    }
+    
+    const deletedTask = this.tasks.splice(taskIndex, 1)[0];
+    console.log(`🗑️ Deleted task: ${deletedTask.title}`);
+    
+    return { ok: true, deleted: deletedTask };
+  }
+}

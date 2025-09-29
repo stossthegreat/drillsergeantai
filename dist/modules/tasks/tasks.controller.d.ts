@@ -17,4 +17,17 @@ export declare class TasksController {
         ok: boolean;
         timestamp: string;
     }>;
+    delete(req: any, id: string): Promise<{
+        ok: boolean;
+        deleted: {
+            id: string;
+            userId: string;
+            title: string;
+            description: string;
+            dueDate: string;
+            completed: boolean;
+            completedAt: any;
+            createdAt: string;
+        };
+    }>;
 }

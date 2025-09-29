@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Req, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 
@@ -31,4 +31,12 @@ export class TasksController {
     await this.tasksService.completeTask(id, 'demo-user-123');
     return { ok: true, timestamp: new Date().toISOString() };
   }
-} 
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete task' })
+  @ApiResponse({ status: 200, description: 'Task deleted' })
+  @ApiBearerAuth()
+  async delete(@Req() req: any, @Param('id') id: string) {
+    return this.tasksService.delete(id, 'demo-user-123');
+  }
+}

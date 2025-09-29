@@ -2,101 +2,45 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class VoiceService {
-  private readonly elevenLabsApiKey = process.env.ELEVENLABS_API_KEY;
-  
-  // ElevenLabs voice IDs for different mentors
-  private readonly mentorVoices = {
-    'drill-sergeant': process.env.ELEVENLABS_VOICE_DRILL || 'pNInz6obpgDQGcFmaJgB',
-    'marcus-aurelius': process.env.ELEVENLABS_VOICE_MARCUS || 'EXAVITQu4vr4xnSDxMaL', 
-    'buddha': process.env.ELEVENLABS_VOICE_BUDDHA || 'ErXwobaYiN019PkySvjV',
-    'abraham-lincoln': process.env.ELEVENLABS_VOICE_LINCOLN || '21m00Tcm4TlvDq8ikWAM',
-    'confucius': process.env.ELEVENLABS_VOICE_CONFUCIUS || 'AZnzlk1XvdvUeBnXmlld'
-  };
-
-  async generateTTS(text: string, mentor: string = 'drill-sergeant') {
-    const voiceId = this.mentorVoices[mentor] || this.mentorVoices['drill-sergeant'];
+  async generateTTS(text: string, voice: string = 'balanced') {
+    // Mock TTS generation - in production this would call ElevenLabs
+    console.log(`🎵 Generating TTS: "${text}" with voice: ${voice}`);
     
-    // If no API key, return mock
-    if (!this.elevenLabsApiKey) {
-      console.log('⚠️ ElevenLabs API key not configured, using mock TTS');
-        return { 
-        audioUrl: `https://mock-tts.com/audio/${encodeURIComponent(text)}`,
-        voice: mentor,
-        voiceId,
-        text,
-        source: 'mock',
-        timestamp: new Date().toISOString()
-      };
-    }
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    try {
-      console.log(`🎵 Generating ElevenLabs TTS for ${mentor}: "${text.substring(0, 50)}..."`);
-      
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': this.elevenLabsApiKey
-        },
-        body: JSON.stringify({
-          text: text,
-          model_id: "eleven_monolingual_v1",
-          voice_settings: {
-            stability: 0.3,
-            similarity_boost: 0.8,
-            style: 0.2,
-            use_speaker_boost: true
-          }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
-      }
-
-      const audioBuffer = await response.arrayBuffer();
-      
-      // In production, you'd save this to cloud storage and return the URL
-      // For now, return a data URL or save locally
-      const base64Audio = Buffer.from(audioBuffer).toString('base64');
-      
-      console.log(`✅ ElevenLabs TTS generated successfully for ${mentor}`);
-      
-      return {
-        audioUrl: `data:audio/mpeg;base64,${base64Audio}`,
-        voice: mentor,
-        voiceId,
-        text,
-        source: 'elevenlabs',
-        charCount: text.length,
-        timestamp: new Date().toISOString()
-      };
-
-    } catch (error) {
-      console.error(`❌ ElevenLabs TTS error for ${mentor}: ${error.message}`);
-      
-      // Fallback to mock on error
-      return { 
-        audioUrl: `https://mock-tts.com/audio/${encodeURIComponent(text)}`,
-        voice: mentor,
-        voiceId,
-        text,
-        source: 'fallback',
-        error: error.message,
-        timestamp: new Date().toISOString()
-      };
-    }
+    // Mock audio URL
+    const audioUrl = `https://drillsergeant-voice.s3.amazonaws.com/tts/${Date.now()}.mp3`;
+    
+    return {
+      url: audioUrl,
+      text,
+      voice,
+      source: 'mock_tts',
+      createdAt: new Date().toISOString()
+    };
   }
 
-  // Get available mentor voices
-  getMentorVoices() {
-    return Object.keys(this.mentorVoices);
+  async generateAlarmVoice(alarmLabel: string, tone: string = 'balanced') {
+    // Generate drill sergeant voice for alarms
+    const alarmTexts = {
+      'strict': `ATTENTION! Time for ${alarmLabel}. No excuses, soldier! Let's move!`,
+      'balanced': `Hey there! Time for ${alarmLabel}. Let's get this done!`,
+      'light': `Gentle reminder: it's time for ${alarmLabel}. You've got this!`
+    };
+    
+    const text = alarmTexts[tone] || alarmTexts['balanced'];
+    return this.generateTTS(text, tone);
   }
 
-  // Test voice generation
-  async testVoice(mentor: string = 'drill-sergeant') {
-    const testMessage = `Hello! This is ${mentor.replace('-', ' ')} speaking. Your voice system is working perfectly!`;
-    return this.generateTTS(testMessage, mentor);
+  async generateMentorVoice(message: string, mentor: string = 'drill-sergeant') {
+    const mentorPrompts = {
+      'drill-sergeant': `Drill Sergeant: ${message}`,
+      'life-coach': `Life Coach: ${message}`,
+      'marcus-aurelius': `Marcus Aurelius: ${message}`
+    };
+    
+    const text = mentorPrompts[mentor] || mentorPrompts['drill-sergeant'];
+    return this.generateTTS(text, 'balanced');
   }
-} 
+}

@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
       if (item['type'] == 'habit') {
         await apiClient.tickHabit(item['id']);
       } else {
-        await apiClient.tickHabit(item['id']); // Use tickHabit for tasks too
+        await apiClient.completeTask(item['id']); // Use correct task completion method
       }
       
       // Remove from today backend list but keep in UI as completed

@@ -1,61 +1,23 @@
 export declare class VoiceService {
-    private readonly elevenLabsApiKey;
-    private readonly mentorVoices;
-    generateTTS(text: string, mentor?: string): Promise<{
-        audioUrl: string;
-        voice: string;
-        voiceId: any;
+    generateTTS(text: string, voice?: string): Promise<{
+        url: string;
         text: string;
-        source: string;
-        timestamp: string;
-        charCount?: undefined;
-        error?: undefined;
-    } | {
-        audioUrl: string;
         voice: string;
-        voiceId: any;
-        text: string;
         source: string;
-        charCount: number;
-        timestamp: string;
-        error?: undefined;
-    } | {
-        audioUrl: string;
-        voice: string;
-        voiceId: any;
-        text: string;
-        source: string;
-        error: any;
-        timestamp: string;
-        charCount?: undefined;
+        createdAt: string;
     }>;
-    getMentorVoices(): string[];
-    testVoice(mentor?: string): Promise<{
-        audioUrl: string;
-        voice: string;
-        voiceId: any;
+    generateAlarmVoice(alarmLabel: string, tone?: string): Promise<{
+        url: string;
         text: string;
-        source: string;
-        timestamp: string;
-        charCount?: undefined;
-        error?: undefined;
-    } | {
-        audioUrl: string;
         voice: string;
-        voiceId: any;
-        text: string;
         source: string;
-        charCount: number;
-        timestamp: string;
-        error?: undefined;
-    } | {
-        audioUrl: string;
+        createdAt: string;
+    }>;
+    generateMentorVoice(message: string, mentor?: string): Promise<{
+        url: string;
+        text: string;
         voice: string;
-        voiceId: any;
-        text: string;
         source: string;
-        error: any;
-        timestamp: string;
-        charCount?: undefined;
+        createdAt: string;
     }>;
 }
