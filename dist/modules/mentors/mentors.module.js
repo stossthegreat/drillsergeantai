@@ -6,20 +6,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HabitsModule = void 0;
+exports.MentorsModule = void 0;
 const common_1 = require("@nestjs/common");
-const habits_controller_1 = require("./habits.controller");
-const habits_service_1 = require("./habits.service");
+const mentors_service_1 = require("./mentors.service");
 const prisma_module_1 = require("../prisma/prisma.module");
-let HabitsModule = class HabitsModule {
+const voice_module_1 = require("../voice/voice.module");
+let MentorsModule = class MentorsModule {
 };
-exports.HabitsModule = HabitsModule;
-exports.HabitsModule = HabitsModule = __decorate([
+exports.MentorsModule = MentorsModule;
+exports.MentorsModule = MentorsModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
-        controllers: [habits_controller_1.HabitsController],
-        providers: [habits_service_1.HabitsService],
-        exports: [habits_service_1.HabitsService],
+        imports: [prisma_module_1.PrismaModule, voice_module_1.VoiceModule],
+        providers: [mentors_service_1.MentorsService],
+        exports: [mentors_service_1.MentorsService],
     })
-], HabitsModule);
-//# sourceMappingURL=habits.module.js.map
+], MentorsModule);
+//# sourceMappingURL=mentors.module.js.map

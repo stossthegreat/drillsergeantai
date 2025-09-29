@@ -17,7 +17,7 @@ let HabitsService = class HabitsService {
                 title: 'Morning Workout',
                 streak: 7,
                 schedule: { time: '07:00', days: ['mon', 'tue', 'wed', 'thu', 'fri'] },
-                lastTick: new Date().toISOString(),
+                lastTick: null,
                 context: { difficulty: 2, category: 'fitness', lifeDays: 0.5 },
                 color: 'emerald',
                 reminderEnabled: true,
@@ -30,7 +30,7 @@ let HabitsService = class HabitsService {
                 title: 'Read 30 Minutes',
                 streak: 30,
                 schedule: { time: '20:00', days: ['daily'] },
-                lastTick: new Date().toISOString(),
+                lastTick: null,
                 context: { difficulty: 1, category: 'learning', lifeDays: 0.3 },
                 color: 'sky',
                 reminderEnabled: true,
@@ -65,14 +65,37 @@ let HabitsService = class HabitsService {
         if (!habit) {
             throw new Error('Habit not found');
         }
-        const today = new Date().toDateString();
+        const now = new Date();
+        const today = now.toDateString();
         const lastTickDate = habit.lastTick ? new Date(habit.lastTick).toDateString() : null;
         if (lastTickDate === today) {
-            return habit;
+            return {
+                ok: true,
+                idempotent: true,
+                streak: habit.streak,
+                timestamp: habit.lastTick,
+                message: 'Already completed today'
+            };
         }
-        habit.lastTick = new Date().toISOString();
+        habit.lastTick = now.toISOString();
         habit.streak = (habit.streak || 0) + 1;
-        return habit;
+        console.log(`✅ Habit ${habit.title} ticked for ${today}. Streak: ${habit.streak}`);
+        return {
+            ok: true,
+            idempotent: false,
+            streak: habit.streak,
+            timestamp: habit.lastTick,
+            message: `Completed! Streak: ${habit.streak} days`
+        };
+    }
+    async delete(id, userId) {
+        const habitIndex = this.habits.findIndex(h => h.id === id && h.userId === userId);
+        if (habitIndex === -1) {
+            throw new Error('Habit not found');
+        }
+        const deletedHabit = this.habits.splice(habitIndex, 1)[0];
+        console.log(`🗑️ Deleted habit: ${deletedHabit.title}`);
+        return { ok: true, deleted: deletedHabit };
     }
     async update(id, userId, updateData) {
         const habit = this.habits.find(h => h.id === id && h.userId === userId);

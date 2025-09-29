@@ -32,7 +32,7 @@ export declare class BriefController {
                 time: string;
                 days: string[];
             };
-            lastTick: string;
+            lastTick: any;
             context: {
                 difficulty: number;
                 category: string;
@@ -63,7 +63,7 @@ export declare class BriefController {
                 time: string;
                 days: string[];
             };
-            lastTick: string;
+            lastTick: any;
             context: {
                 difficulty: number;
                 category: string;
@@ -115,7 +115,7 @@ export declare class BriefController {
                 time: string;
                 days: string[];
             };
-            lastTick: string;
+            lastTick: any;
             context: {
                 difficulty: number;
                 category: string;
@@ -146,7 +146,7 @@ export declare class BriefController {
                 time: string;
                 days: string[];
             };
-            lastTick: string;
+            lastTick: any;
             context: {
                 difficulty: number;
                 category: string;

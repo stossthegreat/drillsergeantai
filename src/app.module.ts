@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PrismaModule } from './modules/prisma/prisma.module';
 import { VoiceModule } from './modules/voice/voice.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { NudgesModule } from './modules/nudges/nudges.module';
@@ -8,6 +9,7 @@ import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
+    PrismaModule,
     HabitsModule,
     TasksModule,
     BriefModule,
